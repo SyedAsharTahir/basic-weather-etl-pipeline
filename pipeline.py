@@ -65,9 +65,25 @@ def load(weather):
             execute_values(cur,sql,rows)
     conn.close()
     print(f"loaded {len(rows)} rows")
+pastUrl="https://archive-api.open-meteo.com/v1/archive"
+def fetch_history(start_date,end_date):
+        results=[]
+        for city in cities:
+            parameters={
+            "latitude":city["latitude"],
+            "longitude":city["longitude"],
+            "hourly":"temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,weather_code",
+            "timezone":"auto",
+            "start_date":start_date,
+            "end_date":end_date
+            }
+            response=requests.get(pastUrl,params=parameters,timeout=30)
+            response.raise_for_status()
+            data=response.json()#converts to a python dict
+            results.append({"city":city["city"],"data":data})
+        return results
 if __name__=="__main__":
-    results=extract()
-    weather=transform(results)
-    weather=validation(weather)
+    results=fetch_history("2026-09-01","2026-09-30")
+    weather=validation(transform(results))
     print(weather.head())
     load(weather)
