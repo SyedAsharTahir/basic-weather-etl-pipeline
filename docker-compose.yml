@@ -1,0 +1,14 @@
+services: #the containers we will run
+  db: #a name for your service
+    image: postgres:16  #the image to download
+    environment:
+      POSTGRES_USER: pipeline
+      POSTGRES_PASSWORD: pipeline
+      POSTGRES_DB: weather
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+
+volumes:
+  pgdata:
