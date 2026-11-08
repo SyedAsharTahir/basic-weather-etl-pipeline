@@ -1,8 +1,8 @@
 import requests
-import numpy as np
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
+import sys
 url="https://api.open-meteo.com/v1/forecast"#base url the rest in it was paramters
 cities=[
     {"city":"karachi","latitude":24.8608,"longitude":67.0104},
@@ -83,7 +83,21 @@ def fetch_history(start_date,end_date):
             results.append({"city":city["city"],"data":data})
         return results
 if __name__=="__main__":
-    results=fetch_history("2026-11-01","2026-11-06")
+    instructions="python pipeline.py daily | backfill startDate endDate"
+    if len(sys.argv)<2:
+        print(instructions)
+        sys.exit(1)
+    if sys.argv[1]=="daily":
+        results=extract()
+    elif sys.argv[1] =="backfill":
+        if len(sys.argv)<4:
+            print(instructions)
+            sys.exit(1)
+        results=fetch_history(sys.argv[2],sys.argv[3])
+    else:
+        print(instructions)
+        sys.exit(1)
+
     weather=validation(transform(results))
     print(weather.head())
     load(weather)
