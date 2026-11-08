@@ -83,7 +83,7 @@ def fetch_history(start_date,end_date):
             results.append({"city":city["city"],"data":data})
         return results
 if __name__=="__main__":
-    results=fetch_history("2026-09-01","2026-09-30")
+    results=fetch_history("2026-11-01","2026-11-06")
     weather=validation(transform(results))
     print(weather.head())
     load(weather)
