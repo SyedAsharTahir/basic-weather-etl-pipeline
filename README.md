@@ -82,6 +82,7 @@ airflow standalone
 Then open http://localhost:8080 and log in with the credentials printed in the terminal. The `weather_daily` DAG appears in the list, and you can run it once with **Trigger**.
 
 Postgres must be running (`docker compose up -d`) for the load to succeed.
+![Airflow run](docs/airflow-run.png)
 
 ## Roadmap
 
