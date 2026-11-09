@@ -84,8 +84,32 @@ Then open http://localhost:8080 and log in with the credentials printed in the t
 Postgres must be running (`docker compose up -d`) for the load to succeed.
 ![Airflow run](docs/airflow-run.png)
 
+## Transforming with dbt
+
+A dbt project in `dbt_weather/` turns the raw hourly table into an analysis-ready model, `analytics.daily_weather`: one row per city per day with average, max and min temperature and total rain.
+
+Data tests check that `city`, `day` and `avg_temp` are never null.
+
+```bash
+# One-time setup
+uv venv --python 3.12 ~/venvs/dbt
+source ~/venvs/dbt/bin/activate
+uv pip install dbt-postgres
+```
+
+dbt reads its database connection from `~/.dbt/profiles.yml`, which is kept outside the repo so credentials aren't committed. Add a profile named `dbt_weather` pointing at the local Postgres (host `localhost`, port `5432`, database `weather`, schema `analytics`), or generate it with `dbt init`.
+
+```bash
+# Build and test the model
+cd dbt_weather
+dbt run
+dbt test
+```
+
+Run `dbt run` after each load to refresh the daily summary.
+
 ## Roadmap
 
 - [X] Schedule the daily run with Apache Airflow
-- [ ] Add dbt models (daily aggregates per city) with data tests
+- [X] Add dbt models (daily aggregates per city) with data tests
 - [ ] Move credentials to environment variables
