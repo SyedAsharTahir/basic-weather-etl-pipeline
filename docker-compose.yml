@@ -2,9 +2,9 @@ services: #the containers we will run
   db: #a name for your service
     image: postgres:16  #the image to download
     environment:
-      POSTGRES_USER: pipeline
-      POSTGRES_PASSWORD: pipeline
-      POSTGRES_DB: weather
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:

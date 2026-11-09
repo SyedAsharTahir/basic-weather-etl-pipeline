@@ -2,7 +2,10 @@ import requests
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
+import os
+from dotenv import load_dotenv # type: ignore
 import sys
+load_dotenv()
 url="https://api.open-meteo.com/v1/forecast"#base url the rest in it was paramters
 cities=[
     {"city":"karachi","latitude":24.8608,"longitude":67.0104},
@@ -59,7 +62,13 @@ def load(weather):
                 weather_code=EXCLUDED.weather_code
     """
     rows=list(weather[cols].itertuples(index=False,name=None))
-    conn=psycopg2.connect(host="localhost",port=5432,dbname="weather",user="pipeline",password="pipeline")
+    conn=psycopg2.connect(
+        host=os.environ["POSTGRES_HOST"],
+        port=os.environ["POSTGRES_PORT"],
+        dbname=os.environ["POSTGRES_DB"],
+        user=os.environ["POSTGRES_USER"],
+        password=os.environ["POSTGRES_PASSWORD"]
+        )
     with conn:
         with conn.cursor() as cur:
             execute_values(cur,sql,rows)
