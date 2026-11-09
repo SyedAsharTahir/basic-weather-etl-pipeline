@@ -60,8 +60,31 @@ docker compose exec db psql -U pipeline -d weather \
   -c "SELECT city, count(*), min(observed_at), max(observed_at) FROM hourly_weather GROUP BY city;"
 ```
 
+## Scheduling with Airflow
+
+The daily load is scheduled with Apache Airflow. The DAG in `dags/weather_daily.py` runs `pipeline.py daily` once a day. Because the load is an upsert, retries and re-runs are safe.
+
+Airflow runs in its own virtual environment (Python 3.12), separate from the pipeline's, so their dependencies don't clash. The DAG calls the pipeline's own Python, so Airflow doesn't need pandas.
+
+```bash
+# One-time setup
+uv venv --python 3.12 ~/venvs/airflow
+source ~/venvs/airflow/bin/activate
+uv pip install "apache-airflow==3.0.6" \
+  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.6/constraints-3.12.txt"
+
+# Each time you start it
+export AIRFLOW_HOME=~/airflow
+export AIRFLOW__CORE__DAGS_FOLDER=~/projects/etl-pipeline/dags
+airflow standalone
+```
+
+Then open http://localhost:8080 and log in with the credentials printed in the terminal. The `weather_daily` DAG appears in the list, and you can run it once with **Trigger**.
+
+Postgres must be running (`docker compose up -d`) for the load to succeed.
+
 ## Roadmap
 
-- [ ] Schedule the daily run with Apache Airflow
+- [X] Schedule the daily run with Apache Airflow
 - [ ] Add dbt models (daily aggregates per city) with data tests
 - [ ] Move credentials to environment variables
