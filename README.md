@@ -21,6 +21,8 @@ Python, pandas, PostgreSQL 16, Docker Compose, psycopg2
 ## Setup
 
 ```bash
+# 0. Create your config file and edit the values
+    cp .env.example .env
 # 1. Start Postgres
 docker compose up -d
 
