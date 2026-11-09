@@ -22,14 +22,15 @@ Python, pandas, PostgreSQL 16, Docker Compose, psycopg2
 
 ```bash
 # 0. Create your config file and edit the values
-    cp .env.example .env
+cp .env.example .env
+
 # 1. Start Postgres
 docker compose up -d
 
 # 2. Create a virtual environment and install dependencies
 python3 -m venv venv
 source venv/bin/activate
-pip install pandas requests psycopg2-binary
+pip install -r requirements.txt
 
 # 3. Create the table (first run only)
 docker compose exec db psql -U pipeline -d weather -c "
@@ -84,6 +85,7 @@ airflow standalone
 Then open http://localhost:8080 and log in with the credentials printed in the terminal. The `weather_daily` DAG appears in the list, and you can run it once with **Trigger**.
 
 Postgres must be running (`docker compose up -d`) for the load to succeed.
+
 ![Airflow run](docs/airflow-run.png)
 
 ## Transforming with dbt
