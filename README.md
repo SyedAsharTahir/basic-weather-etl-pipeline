@@ -114,4 +114,4 @@ Run `dbt run` after each load to refresh the daily summary.
 
 - [X] Schedule the daily run with Apache Airflow
 - [X] Add dbt models (daily aggregates per city) with data tests
-- [ ] Move credentials to environment variables
+- [X] Move credentials to environment variables
