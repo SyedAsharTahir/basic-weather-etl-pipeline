@@ -12,3 +12,4 @@ services: #the containers we will run
 
 volumes:
   pgdata:
+    name: etlpipeline_pgdata
