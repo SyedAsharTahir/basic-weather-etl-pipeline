@@ -111,7 +111,13 @@ dbt test
 ```
 
 Run `dbt run` after each load to refresh the daily summary.
+## Dashboard
 
+A Power BI dashboard built on the dbt model `analytics.daily_weather` shows daily temperature and rainfall by city, with city and date filters.
+
+![Dashboard](docs/dashboard.png)
+
+Findings: Karachi has much milder winters than the northern cities, and rainfall peaks during the July to August monsoon.
 ## Roadmap
 
 - [X] Schedule the daily run with Apache Airflow
